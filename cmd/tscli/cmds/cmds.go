@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/olekukonko/tablewriter"
 	"github.com/opcoder0/typesense-cli/pkg/config"
 	"github.com/spf13/cobra"
 	"github.com/typesense/typesense-go/typesense"
@@ -55,7 +56,10 @@ func listCmd(cmd *cobra.Command, args []string) {
 		fmt.Println("List collections: ", err)
 		os.Exit(1)
 	}
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Collections"})
 	for _, c := range collections {
-		fmt.Println(c.Name)
+		table.Append([]string{c.Name})
 	}
+	table.Render()
 }
