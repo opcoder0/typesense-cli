@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/opcoder0/typesense-cli/pkg/config"
@@ -57,9 +58,14 @@ func listCmd(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Collections"})
+	table.SetHeader([]string{"Name", "Number of Documents", "Created At"})
 	for _, c := range collections {
-		table.Append([]string{c.Name})
+		var n int64
+		if c.NumDocuments != nil {
+			n = *c.NumDocuments
+		}
+		t := time.Unix(*c.CreatedAt, 0)
+		table.Append([]string{c.Name, fmt.Sprintf("%d", n), fmt.Sprintf("%v", t)})
 	}
 	table.Render()
 }
